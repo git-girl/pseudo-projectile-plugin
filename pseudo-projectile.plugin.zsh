@@ -2,7 +2,7 @@
 # Written by Git Girl (git-girl) 
 # github.com/git-girl/pseudo-projectile-plugin
 
-PATHTOPROJECTS="~/projects"
+PATHTOPROJECTS="$HOME/projects"
 
 # open project symlink folder with FZF and start nvim
 open_project() { 
