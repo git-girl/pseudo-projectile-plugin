@@ -11,8 +11,10 @@ After installing you can of course create aliases for the functions, as typing o
 # Why? 
 
 I like projectile in emacs and couldn't find something like it for the terminal. 
+
 I don't like typing out paths, even with recursive FZF search. 
 
+In the end this is practically just FZF customization though :S 
 
 # Getting Started
 
