@@ -51,8 +51,3 @@ I don't like typing out paths, even with recursive FZF search.
 
 This Plugin is currently set up very much for my own workflow. 
 Maybe I will spend some more time on it and generalize it. 
-
-# TODOs 
-
-- [ ] add customization options ( calling neovim, some other editor or none ) 
-- [ ] add customization function for paths
