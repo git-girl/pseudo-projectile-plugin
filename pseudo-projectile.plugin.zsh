@@ -1,7 +1,8 @@
 # Pseudo-Projectile Plugin for zsh
 # Written by Git Girl (git-girl) 
+# github.com/git-girl/pseudo-projectile-plugin
 
-PATHTOPROJECTS="/Users/flowergirl/projects"
+PATHTOPROJECTS="~/projects"
 
 # open project symlink folder with FZF and start nvim
 open_project() { 
