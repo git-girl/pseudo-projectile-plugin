@@ -18,11 +18,11 @@ I don't like typing out paths, even with recursive FZF search.
 
 Clone this repository somewhere on your machine. This guide will assume ~/.zsh/zsh-autosuggestions.
 
-git clone https://github.com/git-girl/pseudo-projectile-plugin ~/.zsh/pseudo-projectile
+`git clone https://github.com/git-girl/pseudo-projectile-plugin ~/.zsh/pseudo-projectile`
 
 2. Add the following to your .zshrc:
 
-source ~/.zsh/pseudo-projectile/pseudo-projectile.plugin.zsh 
+`source ~/.zsh/pseudo-projectile/pseudo-projectile.plugin.zsh` 
 
 3. Start a new terminal session.
 
@@ -30,14 +30,17 @@ source ~/.zsh/pseudo-projectile/pseudo-projectile.plugin.zsh
 ## oh-my-zsh 
 
 1. Clone this repository into $ZSH_CUSTOM/plugins (by default ~/.oh-my-zsh/custom/plugins)
+
 `git clone https://github.com/git-girl/pseudo-projectile-plugin ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/pseudo-projectile`
 
 2. Add the plugin to the list of plugins for Oh My Zsh to load (inside ~/.zshrc):
 
+```
     plugins=( 
         # other plugins...
         pseudo-projectile
     )
+```
 
 3. Start a new terminal session.
 
