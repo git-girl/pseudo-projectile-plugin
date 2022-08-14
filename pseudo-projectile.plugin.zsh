@@ -6,7 +6,7 @@ PATHTOPROJECTS="$HOME/projects"
 
 # open project symlink folder with FZF and start nvim
 open_project() { 
-    cd $(find -L $PATHTOPROJECTS -maxdepth 1 -type d -print | fzf )
+    cd $(find -L $PATHTOPROJECTS -maxdepth 1 -type d -print | fzf --no-multi )
     nvim .
 } 
 
