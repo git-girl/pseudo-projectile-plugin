@@ -1,6 +1,6 @@
 # Pseudo Projectile Plugin for zsh 
 
-This Plugin opens project paths with nvim using fzf. 
+This very simple plugin opens project paths with nvim using fzf. 
 
 The function open_project opens a projects path in nvim with calling find piped into fzf in a project directory. 
 
