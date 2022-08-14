@@ -6,6 +6,8 @@ The function open_project opens a projects path in nvim with calling find piped 
 
 The project directory contains symlinks to projects, that can be added to it through the add_project function, adding the `pwd`. 
 
+After installing you can of course create aliases for the functions, as typing out open_project is a bother. 
+
 # Why? 
 
 I like projectile in emacs and couldn't find something like it for the terminal. 
