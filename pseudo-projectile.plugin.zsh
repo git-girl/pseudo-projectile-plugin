@@ -6,7 +6,6 @@ PATHTOPROJECTS="$HOME/projects"
 
 # open project symlink folder with FZF and start nvim
 open_project() { 
-
     start_dir=$PWD 
 
     #set the path to cd into and perform checks
@@ -14,7 +13,10 @@ open_project() {
 
     # only open if there is some cd path selected 
     if [[ $cd_path != "" ]] then
+        cd $cd_path
         nvim . 
+    else 
+        echo "no symlink was selected - no action taken" 
     fi
 } 
 
