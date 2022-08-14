@@ -2,9 +2,9 @@
 
 This very simple plugin opens project paths with nvim using fzf. 
 
-The function open_project opens a projects path in nvim with calling find piped into fzf in a project directory. 
+The command open_project opens a projects path in nvim with calling find piped into fzf in a project directory. 
 
-The project directory contains symlinks to projects, that can be added to it through the add_project function, adding the `pwd`. 
+The project directory contains symlinks to projects, that can be added to it through the add_project command, adding the `pwd`. 
 
 After installing you can of course create aliases for the functions, as typing out open_project is a bother. 
 
