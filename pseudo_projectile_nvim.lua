@@ -20,15 +20,20 @@ local action_state = require("telescope.actions.state")
 -- TODO: i think this should be local
 pseudoProjectile = function(opts) 
     opts = opts or {} 
-    projectPath = "$HOME/projects" 
+    projectPath = "/Users/flowergirl/projects" 
     pickers.new(opts, { 
         prompt_title = "Pick project to open",
         finder = finders.new_oneshot_job { 
-            
-            fn_command = { 
-                command = "find", 
-                args = { "-L", projectPath, "-maxdepth", "1", "-type", "d", "-print" }  
-            } 
+                'find',
+                -- { '-L', '/', '-maxdepth', '1', '-type', 'd', '-print' }  
+                opts, 
+                entry_maker = function(entry)
+                    return {
+                        value = entry,
+                        display = entry[1],
+                        ordinal = entry[1],
+                    }
+                end
 
             --{"find", "-L", projectPath, "-maxdepth", "1", "-type", "d", "-print" }, 
 
