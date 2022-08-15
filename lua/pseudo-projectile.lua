@@ -4,6 +4,7 @@ return require("telescope").register_extension {
     -- access extension config and user config
   end,
   exports = {
-    openProjects = require("pseudo-projectile").openProjects
+      -- this is the problem line 
+    openProjects = require("pseudo-projectile-nvim").openProjects
   },
 }
