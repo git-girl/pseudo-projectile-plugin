@@ -24,7 +24,7 @@ local action_state = require("telescope.actions.state")
 -- TODO: i think this should be local
 -- Usage: call pseudoProjectile('/absolute/path/to/projects') 
 
-pseudoProjectile = function(path, opts) 
+openProjects = function(path, opts) 
     opts = opts or {} 
 
     pickers.new(opts, { 
