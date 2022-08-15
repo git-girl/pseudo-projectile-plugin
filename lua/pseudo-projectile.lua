@@ -5,6 +5,6 @@ return require("telescope").register_extension {
   end,
   exports = {
       -- this is the problem line 
-    openProjects = require("pseudo-projectile-nvim").openProjects
+    openProjects = require("pseudo-projectile").openProjects
   },
 }
