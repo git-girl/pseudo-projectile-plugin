@@ -2,10 +2,8 @@
 # Written by Git Girl (git-girl) 
 # github.com/git-girl/pseudo-projectile-plugin
 
-PATHTOPROJECTS="$HOME/projects"
-
 # open project symlink folder with FZF and start nvim
-project_go() { 
+project_open() { 
 
     start_dir=$PWD 
 

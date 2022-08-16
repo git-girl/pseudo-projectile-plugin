@@ -16,13 +16,15 @@ I don't like typing out paths, even with recursive FZF search.
 
 In the end this is practically just FZF customization though :S 
 
-Why not, the hopefully eventually nice thing the nvim integration is already done by [telescope-project](https://github.com/nvim-telescope/telescope-project.nvim)
+Why not?: If you're looking for project management in nvim i would recommend checking out  [telescope-project](https://github.com/nvim-telescope/telescope-project.nvim) first 
 
 # Getting Started
 
-## manual 
+## Installing
 
-1. Clone this repository somewhere on your machine. This guide will assume ~/.zsh/zsh-autosuggestions.
+### manual 
+
+1. Clone this repository somewhere on your machine. This guide will assume ~/.zsh/pseudo-projectile.
 
     `git clone https://github.com/git-girl/pseudo-projectile-plugin ~/.zsh/pseudo-projectile`
 
@@ -33,7 +35,7 @@ Why not, the hopefully eventually nice thing the nvim integration is already don
 3. Start a new terminal session.
 
 
-## oh-my-zsh 
+### oh-my-zsh 
 
 1. Clone this repository into $ZSH_CUSTOM/plugins (by default ~/.oh-my-zsh/custom/plugins)
 
@@ -50,6 +52,31 @@ Why not, the hopefully eventually nice thing the nvim integration is already don
 
 3. Start a new terminal session.
 
+## Setting Up 
+
+### Creating and Setting project path 
+
+1. Create a directory for the symlinks to your projects to go to, f.e.:
+```
+mkdir ~/projects 
+```
+2. In your `.zshrc` add your path as `PATHTOPROJECTS`
+```
+PATHTOPROJECTS='$HOME/projects'
+```
+
+### Ideas for Aliasing 
+The commands have names that are supposed to be very descriptive.
+To have a nicer workflow, I have them aliased. 
+
+f.e. in your ~/.zshrc: 
+
+```
+alias po="project_open"
+alias pe="project_edit"
+alias pa="project_add" 
+```
+Note: I will refactor the open edit stuff to be the same command using flags.
 
 # State 
 
