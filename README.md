@@ -16,6 +16,8 @@ I don't like typing out paths, even with recursive FZF search.
 
 In the end this is practically just FZF customization though :S 
 
+Why not, the hopefully eventually nice thing the nvim integration is already done by [telescope-project](https://github.com/nvim-telescope/telescope-project.nvim)
+
 # Getting Started
 
 ## manual 
