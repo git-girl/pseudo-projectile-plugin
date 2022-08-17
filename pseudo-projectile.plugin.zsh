@@ -3,15 +3,17 @@
 # github.com/git-girl/pseudo-projectile-plugin
 
 # open project symlink folder with FZF and start nvim
+
 project_open() { 
 
     start_dir=$PWD 
 
     #set the path to cd into and perform checks
-    cd_path=$(find -L $PATHTOPROJECTS -maxdepth 1 -type d -print | fzf --no-multi --height 30%)
+    cd_path=$(find -L $PATHTOPROJECTS -maxdepth 1 -print | fzf --no-multi --height 30%)
 
     # only open if there is some cd path selected 
     if [[ $cd_path != "" ]] then
+        # TODO: if $cd_path.is_a(Directory) elif cd_path.is_a(File) -> go to directory in file path before it
         cd $cd_path
     fi
 } 
@@ -22,7 +24,7 @@ project_edit() {
     start_dir=$PWD 
 
     #set the path to cd into and perform checks
-    cd_path=$(find -L $PATHTOPROJECTS -maxdepth 1 -type d -print | fzf --no-multi --height 30%)
+    cd_path=$(find -L $PATHTOPROJECTS -maxdepth 1 -print | fzf --no-multi --height 30%)
 
     # only open if there is some cd path selected 
     if [[ $cd_path != "" ]] then
