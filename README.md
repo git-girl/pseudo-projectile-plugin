@@ -84,6 +84,8 @@ Note: I will refactor the open edit stuff to be the same command using flags.
 
 - `-s` Sets the size of FZF window by percentage 
 - `-e` Sets the editor
+- `-f` Sets teh FZF Colors like folowing the format 
+` fg:#bbccdd,fg+:#ddeeff,bg:#334455,preview-bg:#223344,border:#778899 `
 
 # State 
 
