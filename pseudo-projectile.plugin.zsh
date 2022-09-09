@@ -12,14 +12,13 @@ project_open() {
     # default size 10 Percent
     local size=10
 
-    while getopts "e:s:" opt; do 
+    while getopts "e:s:c:" opt; do 
         case "${opt}" in
             e)
                 local editor=${OPTARG} # should return stuff like nvim, vim, code
                 ;;
             s) 
                 local size=${OPTARG}
-                echo $size
                 ;;
             h) 
                 echo "this should return a usage out"
@@ -36,8 +35,12 @@ project_open() {
         esac
     done
 
-    #set the path to cd into and perform checks
-    local cd_path=$(find -L $PATHTOPROJECTS -maxdepth 1 -print | fzf --no-multi --height $size)
+    #set the path to cd into and perform checks ( and do color support)
+    if (( ${+projectile_colors} )) then
+        local cd_path=$(find -L $PATHTOPROJECTS -maxdepth 1 -print | fzf --no-multi --height $size --color $projectile_colors)
+    else 
+        local cd_path=$(find -L $PATHTOPROJECTS -maxdepth 1 -print | fzf --no-multi --height $size)
+    fi
 
     # only open if there is some cd path selected 
     if [[ $cd_path != "" ]] then
