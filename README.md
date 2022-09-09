@@ -75,10 +75,15 @@ f.e. in your ~/.zshrc:
 
 ```
 alias po="project_open"
-alias pe="project_edit"
+alias pe="project_open -e nvim"
 alias pa="project_add" 
 ```
 Note: I will refactor the open edit stuff to be the same command using flags.
+
+### Customization 
+
+- `-s` Sets the size of FZF window by percentage 
+- `-e` Sets the editor
 
 # State 
 
