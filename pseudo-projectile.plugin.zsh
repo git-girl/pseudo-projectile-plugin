@@ -12,9 +12,6 @@ project_open() {
     # default size 10 Percent
     local size=10
 
-    if [[ $@ ]]; then
-       local argument=$@ 
-    fi
 
     while getopts "e:s:c:" opt; do 
         case "${opt}" in
