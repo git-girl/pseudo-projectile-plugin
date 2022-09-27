@@ -12,6 +12,10 @@ project_open() {
     # default size 10 Percent
     local size=10
 
+    if [[ $@ ]]; then
+       local argument=$@ 
+    fi
+
     while getopts "e:s:c:" opt; do 
         case "${opt}" in
             e)
@@ -29,15 +33,15 @@ project_open() {
                 echo "TODO: this needs to abort fzf" 
                 ;;
             ?) 
-                echo "must supply an argumen" 
+                echo "must supply an argument" 
                 echo "TODO: this needs to abort fzf" 
                 ;;
         esac
     done
 
     #set the path to cd into and perform checks ( and do color support)
-    if (( ${+projectile_colors} )) then
-        local cd_path=$(find -L $PATHTOPROJECTS -maxdepth 1 -print | fzf --no-multi --height $size --color $projectile_colors)
+    if [[ $argument ]]; then
+        local cd_path=$(find -L $PATHTOPROJECTS -maxdepth 1 -print | fzf --no-multi --height $size -1 -q $argument)
     else 
         local cd_path=$(find -L $PATHTOPROJECTS -maxdepth 1 -print | fzf --no-multi --height $size)
     fi
