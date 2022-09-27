@@ -17,9 +17,11 @@ project_open() {
         case "${opt}" in
             e)
                 local editor=${OPTARG} # should return stuff like nvim, vim, code
+                shift 2
                 ;;
             s) 
                 local size=${OPTARG}
+                shift 2
                 ;;
             h) 
                 echo "this should return a usage out"
@@ -37,8 +39,8 @@ project_open() {
     done
 
     #set the path to cd into and perform checks ( and do color support)
-    if [[ $argument ]]; then
-        local cd_path=$(find -L $PATHTOPROJECTS -maxdepth 1 -print | fzf --no-multi --height $size -1 -q $argument)
+    if [[ $1 ]]; then
+        local cd_path=$(find -L $PATHTOPROJECTS -maxdepth 1 -print | fzf --no-multi --height $size -1 -q $1)
     else 
         local cd_path=$(find -L $PATHTOPROJECTS -maxdepth 1 -print | fzf --no-multi --height $size)
     fi
