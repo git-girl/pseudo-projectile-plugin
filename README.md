@@ -64,7 +64,7 @@ mkdir ~/projects
 ```
 2. In your `.zshrc` add your path as `PATHTOPROJECTS`
 ```
-PATHTOPROJECTS='$HOME/projects'
+PATHTOPROJECTS="$HOME/projects"
 ```
 
 ### Ideas for Aliasing 
