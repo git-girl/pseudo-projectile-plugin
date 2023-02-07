@@ -4,7 +4,10 @@
 
 # open project symlink folder with FZF and start nvim
 
-# TODO: Showing Path should be an Option OR RATHER HOW MUCH OF PATH
+if [[ $ZSH_VERSION < 5.8 ]]; then 
+  # there is something about zparseopts that changed on up to 5.8 zsh
+  # TODO: check that this is fine
+fi
 
 project_open() { 
 
@@ -12,8 +15,8 @@ project_open() {
     # default size 10 Percent
     local size=10
 
-
-    while getopts "e:s:c:" opt; do 
+    # TODO: add the --nogit flag after having done the rewrite to zparseopts
+    while getopts "e:s:h" opt; do 
         case "${opt}" in
             e)
                 local editor=${OPTARG} # should return stuff like nvim, vim, code
@@ -46,9 +49,14 @@ project_open() {
     fi
 
     # only open if there is some cd path selected 
-    if [[ $cd_path != "" ]] then
-        # TODO: if $cd_path.is_a(Directory) elif cd_path.is_a(File) -> go to directory in file path before it
+    if [[ $cd_path != "" ]]; then
         cd $cd_path
+        
+        if [[ !$nogit && -d './.git' ]]; then
+            # no ssh access fails quietly :) 
+            echo "doing git support"
+            git fetch
+        fi
         if (( ${+editor} )); then 
             $editor . 
         fi
@@ -60,7 +68,3 @@ project_add() {
     ln -s $PWD $PATHTOPROJECTS
     echo "added $PWD to projects"
 } 
-
-# TODO: there should be some way to call an alias like po and pass the typed stuff before entering 
-# as a search into fzf if there is only one entry returned open it
-#
