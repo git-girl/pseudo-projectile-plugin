@@ -42,8 +42,7 @@ fn parse_opts() -> Options {
     }
 
     println!("Chosen Editor: {:?}", opts);
-    return opts;
-}
+    return opts; }
 
 fn print_help() {
     println!("Pseudo-Projectile-Plugin");
@@ -61,7 +60,7 @@ fn print_help() {
 
 fn project_open() -> i32 {
     let start_dir = std::env::current_dir().unwrap();
-    println!("{:?}", start_dir);
+    // println!("{:?}", start_dir);
 
     // TODO: support opt handling -> do i use geopt -> no zparseopts cuz dependencies
     let find = Command::new("find")
@@ -85,14 +84,20 @@ fn project_open() -> i32 {
         .spawn()
         .expect("failed on fzf");
 
-    let cd_path = fzf.wait_with_output();
+    // returns Vec<u8>
+    let fzf_result = fzf.wait_with_output().expect("getting project from fzf failed");
+    let mut cd_path = String::from_utf8(fzf_result.stdout).unwrap();
+    cd_path.truncate(cd_path.len() - 1); // NOTE: Remove the newline char from path
+    // cd_path = cd_path.into_os_string();
 
-    println!("{:?}", cd_path);
+    println!("CD_PATH: {}", cd_path);
 
-    let cd = Command::new("cd")
-        .arg(cd_path[1].stdout)
-        .spawn()
-        .expect("failed on cd to dir selected with fzf.. weird")
+    // std::env::set_current_dir(&cd_path).expect("Unable to change into [path to executable]/nvs");
+
+    // let cd = Command::new("cd")
+    //     .arg(cd_path)
+    //     .spawn()
+    //     .expect("failed on cd to dir selected with fzf.. weird");
 
     return 0;
 }
