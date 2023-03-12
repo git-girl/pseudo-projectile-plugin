@@ -117,6 +117,7 @@ fn git_fetch(path: String) {
         .spawn()
         .expect("failed on git fetch");
 
+    // sleep(Duration::from_secs(3));
     // println!("{:?}", fzf.stdout);
 
     let notify = Command::new("notify-send")

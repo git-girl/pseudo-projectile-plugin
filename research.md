@@ -86,3 +86,10 @@ https://rust-lang.github.io/async-book/01_getting_started/02_why_async.html
 
 - Threads stay alive regardless of what happens to the parent thread 
 - 
+
+## Pragmatically though: 
+- when the main thread stops another thread still running does get terminated
+  - i have a sleep of 1.5 milliseconds (second/1000) and in the other thread one for 3 seconds
+    - the thing after the 3 sec sleep doesnt execute
+
+- 
