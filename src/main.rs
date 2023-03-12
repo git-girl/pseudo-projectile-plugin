@@ -95,9 +95,8 @@ fn project_open() -> i32 {
     cd_path.truncate(cd_path.len() - 1); // Remove the newline char from path
 
     let cd_path_copy = cd_path.clone();
-    thread::spawn(move || { // Intentional detached thread
-        git_fetch(cd_path_copy.clone());
-    });
+
+    git_fetch(cd_path_copy.clone()); // need to call await or poll
 
     sleep(Duration::from_millis(25));
     // NOTE: retuns cd_path to std out 
@@ -106,7 +105,7 @@ fn project_open() -> i32 {
 }
 
 // WARNING: Doens't work if i have the function be asynchronous
-fn git_fetch(path: String) { 
+async fn git_fetch(path: String) { 
     // NOTE: might send stuff to null instead of stdout
 
     // command has available fields stdin stdout stderr

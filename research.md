@@ -65,3 +65,20 @@ use the asysnc stuff of threads
 I don't need check for a resolved Future just for a pending one
 -> then i know its running and can move on
 ```
+
+## My State 
+- It works fine with 25ms thing but i feel like thats not a really bad implementation 
+
+- Calling it as an async function doesnt do anything because it needs to be awaited or polled 
+  - I don't async stuff and especially not rust async 
+
+  <!-- TODO: -->
+  - [ ] learn shit 
+
+### Learning Shit 
+https://rust-lang.github.io/async-book/01_getting_started/02_why_async.html
+
+> Futures are inert in Rust and make progress only when polled. Dropping a future stops it from making further progress.
+- does this mean that if program terminates the Futures threads are also dropped?
+
+> If you don't need async for performance reasons, threads can often be the simpler alternative.
