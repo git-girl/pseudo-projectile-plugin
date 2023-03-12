@@ -55,7 +55,19 @@ project_open() {
         if [[ !$nogit && -d './.git' ]]; then
             # no ssh access fails quietly :) 
             echo "doing git support"
+            # TODO: look if there is a general linux thing for notify-send 
+            # i want to send a notification if there is a pull available 
+            # but have it run async because i dont want to wait on the fetch 
             git fetch
+            # git fetch && git diff HEAD @{u} --name-only         -> without local changes commited
+            # git fetch && git diff @{u} --name-only              -> with local changes uncommited 
+
+            # i dont quite care about the diff by git fetch but i care more about that 
+            # my version i last pulled is still the one up on the branch
+
+            # Is the HEAD Commit Hash von Fetch origin atm contained in my git log 
+            # No? -> ask if i want to update
+            # git log | grep $(git fetch get the hash idk) 
         fi
         if (( ${+editor} )); then 
             $editor . 
