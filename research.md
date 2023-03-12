@@ -35,4 +35,32 @@ I'm fine with this being a project makefile or something inputted somewhere in p
   - its a program with an async job that returns before the job is finished returning to the shell and input can be piped
     into cd
 
+  ``` bash
+  cd $(./target/debug/pseudo-projectile) 
+  ```
 
+## Confusion 
+
+- I can run the program with 2 threads where one returns stuff and another runs a git fetch 
+
+- without the sleep the 2nd thread cancels -> once the return is there the thread is dropped 
+  and not kept alive
+
+- without the sleep and piping the program into cd means death
+
+- works with sleep but idk if it works if had to run the job longer somewhere before it died
+
+### 2 explanations 
+1. it needs some time to trigger the command calls
+    -> would be impossible to know how much time is needed and how low i can go because of different system performance 
+
+   - What about the notify call though, thats defietly gone then right.
+
+
+# Alternative 
+
+use the asysnc stuff of threads 
+```
+I don't need check for a resolved Future just for a pending one
+-> then i know its running and can move on
+```
