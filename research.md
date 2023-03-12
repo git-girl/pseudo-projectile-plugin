@@ -53,12 +53,13 @@ I'm fine with this being a project makefile or something inputted somewhere in p
 ### 2 explanations 
 1. it needs some time to trigger the command calls
     -> would be impossible to know how much time is needed and how low i can go because of different system performance 
-
-   - What about the notify call though, thats defietly gone then right.
+    it doesnt matter that they are not done
 
 
 # Alternative 
-
+```
+NOTE: it works on my machine TM with a 25ms thing so thats pertty good
+```
 use the asysnc stuff of threads 
 ```
 I don't need check for a resolved Future just for a pending one

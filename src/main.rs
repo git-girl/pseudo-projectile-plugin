@@ -99,7 +99,7 @@ fn project_open() -> i32 {
         git_fetch(cd_path_copy.clone());
     });
 
-    sleep(Duration::from_millis(250));
+    sleep(Duration::from_millis(25));
     // NOTE: retuns cd_path to std out 
     println!("{}", cd_path);
     return 0;
