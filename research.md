@@ -68,6 +68,7 @@ I don't need check for a resolved Future just for a pending one
 
 ## My State 
 - It works fine with 25ms thing but i feel like thats not a really bad implementation 
+  -  At 1ms it doesnt work anymore
 
 - Calling it as an async function doesnt do anything because it needs to be awaited or polled 
   - I don't async stuff and especially not rust async 
@@ -82,3 +83,6 @@ https://rust-lang.github.io/async-book/01_getting_started/02_why_async.html
 - does this mean that if program terminates the Futures threads are also dropped?
 
 > If you don't need async for performance reasons, threads can often be the simpler alternative.
+
+- Threads stay alive regardless of what happens to the parent thread 
+- 

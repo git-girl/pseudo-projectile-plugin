@@ -96,16 +96,18 @@ fn project_open() -> i32 {
 
     let cd_path_copy = cd_path.clone();
 
-    git_fetch(cd_path_copy.clone()); // need to call await or poll
+    thread::spawn(move || { 
+      git_fetch(cd_path_copy.clone()); // need to call await or poll
+    });
 
-    sleep(Duration::from_millis(25));
+    sleep(Duration::from_micros(1500));
     // NOTE: retuns cd_path to std out 
     println!("{}", cd_path);
     return 0;
 }
 
 // WARNING: Doens't work if i have the function be asynchronous
-async fn git_fetch(path: String) { 
+fn git_fetch(path: String) { 
     // NOTE: might send stuff to null instead of stdout
 
     // command has available fields stdin stdout stderr
