@@ -4,10 +4,11 @@
 
 # open project symlink folder with FZF and start nvim
 
-if [[ $ZSH_VERSION < 5.8 ]]; then 
+# if [[ $ZSH_VERSION < 5.8 ]]; then 
   # there is something about zparseopts that changed on up to 5.8 zsh
   # TODO: check that this is fine
-fi
+# else
+# fi
 
 project_open() { 
 
@@ -16,8 +17,12 @@ project_open() {
     local size=10
 
     # TODO: add the --nogit flag after having done the rewrite to zparseopts
-    while getopts "e:s:h" opt; do 
+    while getopts "c:e:s:h" opt; do 
         case "${opt}" in
+            c)
+                local rust_command=${OPTARG}
+                shift 2
+                ;;
             e)
                 local editor=${OPTARG} # should return stuff like nvim, vim, code
                 shift 2
@@ -55,10 +60,8 @@ project_open() {
         if [[ !$nogit && -d './.git' ]]; then
             # no ssh access fails quietly :) 
             echo "doing git support"
-            # TODO: look if there is a general linux thing for notify-send 
-            # i want to send a notification if there is a pull available 
-            # but have it run async because i dont want to wait on the fetch 
-            git fetch
+            
+            ./target/debug/pseudo-projectile --command $command
             # git fetch && git diff HEAD @{u} --name-only         -> without local changes commited
             # git fetch && git diff @{u} --name-only              -> with local changes uncommited 
 
@@ -80,3 +83,4 @@ project_add() {
     ln -s $PWD $PATHTOPROJECTS
     echo "added $PWD to projects"
 } 
+

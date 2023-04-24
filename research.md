@@ -92,4 +92,21 @@ https://rust-lang.github.io/async-book/01_getting_started/02_why_async.html
   - i have a sleep of 1.5 milliseconds (second/1000) and in the other thread one for 3 seconds
     - the thing after the 3 sec sleep doesnt execute
 
-- 
+- Command::new are also independent threads!
+```
+- I don't know if this works. And i'm hella confused. Maybe the easiest thing would be to send stuff to stdout 
+  and some signal to take that and do the stuff while i do my other stuff in rust independently
+```
+
+Process ownership is something like 
+systemd > alacritty > zsh > pseudo-projectile > {fzf, find, git, notify-send}
+                          
+```
+I need to learn more about async stuff and threads. Also about the shell and OS. 
+But it seems like async has a lot of hurdles and would be pretty tough. 
+
+So maybe i should fall back on the solution  zsh-async  library 
+Or i give up the async dream and just have it be synchronous 
+-> regular fetching has little downside 
+  -> Except for being prompted for the key
+```

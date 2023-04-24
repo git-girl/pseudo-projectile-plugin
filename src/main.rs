@@ -1,19 +1,57 @@
-use std::{env, process::{Command, Stdio}};
-use std::thread;
 use crate::thread::sleep;
+use std::str::FromStr;
+use std::thread;
 use std::time::Duration;
+use std::{
+    env,
+    io::{self, Write},
+    process::{Command, Stdio},
+};
 
+// TODO: consider using this binding rather then libc crate dependency
+// use std::os::unix::thread::JoinHandleExt;
+use libc::pthread_exit;
+use std::mem;
+use std::os::raw::c_void;
 // use std::path::Path;
 // use std::sync::mpsc;
 // use std::time::Duration;
 
 fn main() {
     let opts: Options = parse_opts();
-    project_open();
+
+    match opts.command {
+        PPPCommand::GetProjectPath => {
+            let cd_path = get_project_path();
+            println!("{}", cd_path);
+        }
+
+        PPPCommand::GitCheck => {
+            git_check();
+        }
+    }
+}
+
+#[derive(Debug)]
+enum PPPCommand {
+    GetProjectPath,
+    GitCheck,
+}
+
+impl FromStr for PPPCommand {
+    type Err = ();
+    fn from_str(input: &str) -> Result<PPPCommand, Self::Err> {
+        match input {
+            "GetProjectPath" => Ok(PPPCommand::GetProjectPath),
+            "GitCheck" => Ok(PPPCommand::GitCheck),
+            _ => Err(()),
+        }
+    }
 }
 
 #[derive(Debug)]
 struct Options {
+    command: PPPCommand,
     editor: Command,
     size: i32,
     help: bool,
@@ -23,6 +61,7 @@ struct Options {
 fn parse_opts() -> Options {
     // WARNING: this doesnt handle the whole $1 arg  handling with the opts -1 -q $1
     let mut opts = Options {
+        command: PPPCommand::GetProjectPath,
         editor: Command::new("nvim"),
         size: 10,
         help: false,
@@ -33,19 +72,25 @@ fn parse_opts() -> Options {
 
     for i in 0..args.len() {
         let arg = &args[i];
-                                     
-        match arg.as_str() {
-            "--editor" => opts.editor = Command::new(&args[i + 1].as_str()),
-            "--size" => opts.size = args[i + 1].parse::<i32>().unwrap(),
-            "--nogit" => opts.nogit = true,
-            "--help" => print_help(),
-            _ => () // unit thingy is nil return
-            // _ =>  println!("BAD OPT")
+
+        if i < args.len() - 1 {
+            // BUG: breaks if --command ..  but no args
+            match arg.as_str() {
+                // TODO: COMMAND OPT PARSING INTO ENUM
+                "--command" => opts.command = PPPCommand::from_str(&args[i + 1].as_str()).expect("failed parsing PPPCommand opt"),
+                "--editor" => opts.editor = Command::new(&args[i + 1].as_str()),
+                "--size" => opts.size = args[i + 1].parse::<i32>().unwrap(),
+                "--nogit" => opts.nogit = true,
+                "--help" => print_help(),
+                _ => (), // unit thingy is nil return
+                         // _ =>  println!("BAD OPT")
+            }
         }
     }
 
     // println!("Chosen Editor: {:?}", opts);
-    return opts; }
+    return opts;
+}
 
 fn print_help() {
     println!("Pseudo-Projectile-Plugin");
@@ -60,11 +105,7 @@ fn print_help() {
     std::process::exit(0);
 }
 
-
-fn project_open() -> i32 {
-    let start_dir = std::env::current_dir().unwrap();
-    // println!("{:?}", start_dir);
-
+fn get_project_path() -> String {
     // TODO: support opt handling -> do i use geopt -> no zparseopts cuz dependencies
     let find = Command::new("find")
         .arg("-L")
@@ -75,7 +116,6 @@ fn project_open() -> i32 {
         .stdout(Stdio::piped())
         .spawn()
         .expect("failed on find");
-
     let find_res = find.stdout.expect("Failed to open echo stdout");
 
     let fzf = Command::new("fzf")
@@ -88,44 +128,110 @@ fn project_open() -> i32 {
         .expect("failed on fzf");
 
     // returns Vec<u8>
-    let fzf_result = fzf.wait_with_output().expect("getting project from fzf failed");
-    let mut cd_path = String::from_utf8(fzf_result.stdout).unwrap();
-    // WARNING: this can panic -> if no input then subtract with overflow -> be careful need a
-    // check here
-    cd_path.truncate(cd_path.len() - 1); // Remove the newline char from path
+    let fzf_result = fzf
+        .wait_with_output()
+        .expect("getting project from fzf failed");
+    let mut cd_path = String::from_utf8(fzf_result.stdout)
+        .expect("failed transforming fzf input -> probably no path given");
 
-    let cd_path_copy = cd_path.clone();
+    if cd_path.len() >= 1 {
+        cd_path.truncate(cd_path.len() - 1); // Remove the newline char from path
+    } else {
+        eprintln!("failed transforming fzf input -> probably no path given");
+        std::process::exit(0);
+    }
 
-    thread::spawn(move || { 
-      git_fetch(cd_path_copy.clone()); // need to call await or poll
-    });
-
-    sleep(Duration::from_micros(1500));
-    // NOTE: retuns cd_path to std out 
-    println!("{}", cd_path);
-    return 0;
+    cd_path
 }
-
-// WARNING: Doens't work if i have the function be asynchronous
-fn git_fetch(path: String) { 
-    // NOTE: might send stuff to null instead of stdout
-
-    // command has available fields stdin stdout stderr
-    let fzf = Command::new("git")
+fn git_check() {
+    let git_fetch = Command::new("git")
         .arg("fetch")
-        .arg(path)
-        .spawn()
-        .expect("failed on git fetch");
+        .output()
+        .expect("failed on starting git fetch");
 
-    // sleep(Duration::from_secs(3));
-    // println!("{:?}", fzf.stdout);
+    let git_diff = Command::new("git")
+        .arg("diff")
+        .arg("HEAD")
+        .arg("@{u}")
+        .arg("--name-only")
+        .output()
+        .expect("failed starting git diff");
 
     let notify = Command::new("notify-send")
-        .arg("PPP: Git Report")
-        .arg("there")
+        .arg("PPP: started git fetch")
         .spawn()
-        .expect("couldnt send notification regarding git");
+        .expect("couldnt start notify-send");
 
-    // println!("Return stuff from fetch");
-    // println!("{}", path)
+    unsafe {
+        // TODO: Somewhere here
+        // FATAL: exception not rethrown
+        // [1]    2217618 IOT instruction (core dumped)  ./target/debug/pseudo-projectile
+        let retval: *mut c_void = libc::malloc(mem::size_of::<c_void>()) as *mut c_void;
+        // i can get a print until here  which is good :)
+
+        pthread_exit(retval); // WARNING: Is this a memory leak? i make a pointer and don't
+                              // deallocated memory :s
+    }
+}
+
+fn project_open() {
+    let start_dir = std::env::current_dir().unwrap();
+
+    let cd_path = get_project_path();
+
+    let git_fetch = Command::new("git")
+        .arg("fetch")
+        .stdin(Stdio::piped())
+        .spawn()
+        .expect("failed on starting git fetch");
+
+    let git_diff = Command::new("git")
+        .arg("diff")
+        .arg("HEAD")
+        .arg("@{u}")
+        .arg("--name-only")
+        .spawn()
+        .expect("failed starting git diff");
+
+    let notify = Command::new("notify-send")
+        .arg("PPP: started git fetch")
+        .spawn()
+        .expect("couldnt start notify-send");
+
+    // QUESTION: why is this timeout being set?
+    // let zload = Command::new("exec")
+    //     .arg("zmodload")
+    //     .arg("zsh/zselect")
+    //     .spawn()
+    //     .expect("failed on starting zload");
+    //
+    // let _zload_process = zload.stdin.expect("L136");
+    //
+    // let zselect = Command::new("zselect")
+    //     .arg("-t")
+    //     .arg("500")
+    //     // .stdin(Stdio::from(zload_process))
+    //     .spawn()
+    //     .expect("failed on starting zselect settint timeout");
+    // let zselect_process = zselect.stdout.expect("L145");
+
+    let _notify = Command::new("notify-send")
+        .arg("PPP: Git Report")
+        .arg("TODO...  thread comms")
+        // .stdin(Stdio::from(zselect_process))
+        .spawn()
+        .expect("couldnt start notify-send");
+
+    // println!("{}", cd_path);
+    // NOTE: exit process so that other threads aren't terminated
+    // -> unix only windows has other syntax
+    unsafe {
+        // TODO: Somewhere here
+        // FATAL: exception not rethrown
+        // [1]    2217618 IOT instruction (core dumped)  ./target/debug/pseudo-projectile
+        let retval: *mut c_void = libc::malloc(mem::size_of::<c_void>()) as *mut c_void;
+        pthread_exit(retval); // WARNING: Is this a memory leak? i make a pointer and don't
+                              // deallocated memory :s
+    }
+    // return 0;
 }
