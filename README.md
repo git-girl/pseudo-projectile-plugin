@@ -1,12 +1,12 @@
 # Pseudo Projectile Plugin for zsh 
 
 **Quickly jump between paths you regularly use**   
-![Video showing general usage](/assets/ppp1.mp4)
+![Video showing general usage](/assets/ppp1.gif)
 
 **Git Functionality**:    
 Check in the background whether origin has changes that you should probably pull in. Depends on notify-send 
 to report back on the git fetch status.          
-![Video showing notification when origin has changes not present in local](/assets/ppp2.mp4)
+![Video showing notification when origin has changes not present in local](/assets/ppp2.gif)
 
 **This is still very experimental and a lot of stuff will move around in the next month** 
 
