@@ -1,12 +1,12 @@
 # Pseudo Projectile Plugin for zsh 
 
 **Quickly jump between paths you regularly use**   
-https://github.com/git-girl/pseudo-projectile-plugin/assets/103335462/ae2efddc-d283-4f9b-8902-233d5349498c
+![](https://raw.githubusercontent.com/git-girl/pseudo-projectile-plugin/main/.github/images/ppp1.mp4)
 
 **Git Functionality**:    
 Check in the background whether origin has changes that you should probably pull in. Depends on notify-send 
 to report back on the git fetch status.          
-https://github.com/git-girl/pseudo-projectile-plugin/assets/103335462/be60e1ed-e13b-4119-aa8d-31d0583eadf9
+![](https://raw.githubusercontent.com/git-girl/pseudo-projectile-plugin/main/.github/images/ppp2.mp4)
 
 
 **This is still very experimental and a lot of stuff will move around in the next month** 
