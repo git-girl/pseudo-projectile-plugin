@@ -10,34 +10,6 @@
 # else
 # fi
 
-
-git_check_read_origin() { 
-  git ls-remote &
-  pid=$!
-
-  # Set a timeout duration (in seconds)
-  timeout_duration=5
-
-  # Wait for the command to complete or timeout
-  if timeout $timeout_duration wait $pid 2>/dev/null; then
-    echo "Command does not prompt for user input."
-    return true 
-  else
-    echo "Command prompts for user input."
-    return false
-  fi
-}
-
-git_check() { 
-  git fetch 
-  local res=$(git --no-pager diff @{u} HEAD --name-only)
-  return $res
-
-  # fi
-  # echo "asdhjklasd "
-  # notify-send "PPP: Git Report" "..."
-} 
-
 project_open() { 
 
   local start_dir=$PWD 
@@ -84,12 +56,13 @@ project_open() {
       if [[ !$nogit && -d './.git' ]]; then
         # no ssh access fails quietly :) 
         # a_function | [ xargs -r ] another_function
+
         # BUG: If no password this results into uncallable git threads
         # NOTE: Can you just make this a function and then disown that?
+
         if git_check_read_origin; then 
-          ( git_check() | xargs -r notify-send "PPP: G it Report" "" ) & disown;
-        else 
-          echo "no access to git fetch, remote wasn't checked, check your ssh keys or internet."
+          echo "started git check"
+          run_and_report_git_diff & disown
         fi
       fi
       if (( ${+editor} )); then 
@@ -104,3 +77,19 @@ project_add() {
   echo "added $PWD to projects"
 } 
 
+git_check_read_origin_and_fetch() { 
+  # returns 124 on timeout to $?
+  timeout 3 git fetch >/dev/null & disown
+  if [[ $? == 124 ]]; then 
+    notify-send "PPP Git Report" "couldn't run git fetch (3sec timeout), check your ssh keys, or internet connection"
+    return 124
+  fi
+  return 0
+}
+
+run_and_report_git_diff() { 
+  git_diff=$(git diff @{u} HEAD --name-only)
+  notify-send "PPP Git Report" "Found these files on origin not present locally: \n $git_diff"
+
+          # git diff @{u} HEAD --name-only | xargs -r notify-send "PPP: G it Report" ""  & disown
+}
