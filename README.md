@@ -10,6 +10,14 @@ The project directory contains symlinks to projects, that can be added to it thr
 
 After installing you can of course create aliases for the functions, as typing out open_project is a bother. 
 
+ZSH has something called prompts and bash has something like PROMPT_COMMNAD 
+you can set that var to something and it runs after every command this is what i want
+
+there is the zsh-add-hook to add hooks 
+there even is a thing called `chpwd` as a hook event
+
+https://github.com/zsh-users/zsh/blob/master/Functions/Misc/add-zsh-hook
+
 # Why? 
 
 I like projectile in emacs and couldn't find something like it for the terminal. 

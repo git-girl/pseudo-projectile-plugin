@@ -1,3 +1,21 @@
+# Post Overengineering Timeline
+
+easiest is to just: 
+```bash 
+res=$(git fetch && git diff @{u} HEAD --name-only) & disown;
+
+if [ -n "$res" ]; then
+    notify-send "PPP: Git Report" "Found Diff to origin"
+fi
+```
+However im now thinking if i can have a service that listens to all zsh processes and on a 
+cd triggers this git fetch thing as long as its directly contained in a zsh process and not 
+in another process like ssh or nvim 
+
+probably would use strace
+nope i think inotifywait is the way to go
+
+
 # Research for new features
 
 ## User Stories
