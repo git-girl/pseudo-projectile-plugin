@@ -54,12 +54,6 @@ project_open() {
       cd $cd_path
 
       if [[ !$nogit && -d './.git' ]]; then
-        # no ssh access fails quietly :) 
-        # a_function | [ xargs -r ] another_function
-
-        # BUG: If no password this results into uncallable git threads
-        # NOTE: Can you just make this a function and then disown that?
-
         git_main & disown
       fi
       if (( ${+editor} )); then 
@@ -103,10 +97,7 @@ git_main() {
 
   access=$?
 
-  echo "access exit code is: $access"
-
   if [ $access -eq 0 ]; then 
-    echo "started git check"
-    run_and_report_git_diff & disown
+    run_and_report_git_diff >/dev/null & disown
   fi
 }
