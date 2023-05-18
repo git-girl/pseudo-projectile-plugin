@@ -1,3 +1,17 @@
+## Current Design Questions
+
+- jumping itself is a solved issue. There is really nothing to be done there i feel like 
+  - different projects recognize your projects after a while or you get the same functionality that ppp has atm
+
+- the cool thing that i didn't see yet is this git thing. 
+  - the git thing is better suited to be a hook though as its something you want to always run anyways.
+
+- the idea regarding the dev stuff is a bit more complicated and maybe having something like a tmux session for a 
+  project is the easier way to go about things. 
+  - Its really hard to make good choices when it comes to auto shutting down post leaving a dir and stuff like this.
+  - also i do want things to run in the foreground be assigned to the correct window layout on the correct workspaces 
+    - thats easier done with i3 and maybe tmux
+
 
 ZSH has something called prompts and bash has something like PROMPT_COMMNAD 
 you can set that var to something and it runs after every command this is what i want
@@ -7,133 +21,3 @@ there even is a thing called `chpwd` as a hook event
 
 https://github.com/zsh-users/zsh/blob/master/Functions/Misc/add-zsh-hook
 
-# Post Overengineering Timeline
-
-easiest is to just: 
-```bash 
-res=$(git fetch && git diff @{u} HEAD --name-only) & disown;
-
-if [ -n "$res" ]; then
-    notify-send "PPP: Git Report" "Found Diff to origin"
-fi
-```
-However im now thinking if i can have a service that listens to all zsh processes and on a 
-cd triggers this git fetch thing as long as its directly contained in a zsh process and not 
-in another process like ssh or nvim 
-
-probably would use strace
-nope i think inotifywait is the way to go
-
-
-# Research for new features
-
-## User Stories
-
-### git integration user story
-
-Whenever i open a project i want to have it check git for latest stuff 
-I need this to be seamless -> async
-I don't want to wait on it -> notification rather then shell stuff
-
----
-
-### dev tools user story
-
-Whenever i open a project i want dev tools associated with the project i.e a development server 
-to be opened 
-I'm fine with this being a project makefile or something inputted somewhere in projects dir
-  - in projects dir something like .hooks/
-
-
-## Tooling 
-
-- https://github.com/mafredri/zsh-async
-  - seems pretty cool also has a notification feature
-  - also seems like bit of hastle 
-  - article on working with it https://medium.com/@henrebotha/how-to-write-an-asynchronous-zsh-prompt-b53e81720d32
-
-- Actually do the rust version. 
-  - i want to use rust anyways, i think the code base would be much more manageable this way too
-  - The issue i had before was that i just couldn't cd because that's outside the confines lol me smort
-  - i can just pipe input in however and have async threads do git and dev stuff  
-
-## Plan 
-1. Write a proof of concept in rust. 
-  - its a program with an async job that returns before the job is finished returning to the shell and input can be piped
-    into cd
-
-  ``` bash
-  cd $(./target/debug/pseudo-projectile) 
-  ```
-
-## Confusion 
-
-- I can run the program with 2 threads where one returns stuff and another runs a git fetch 
-
-- without the sleep the 2nd thread cancels -> once the return is there the thread is dropped 
-  and not kept alive
-
-- without the sleep and piping the program into cd means death
-
-- works with sleep but idk if it works if had to run the job longer somewhere before it died
-
-### 2 explanations 
-1. it needs some time to trigger the command calls
-    -> would be impossible to know how much time is needed and how low i can go because of different system performance 
-    it doesnt matter that they are not done
-
-
-# Alternative 
-```
-NOTE: it works on my machine TM with a 25ms thing so thats pertty good
-```
-use the asysnc stuff of threads 
-```
-I don't need check for a resolved Future just for a pending one
--> then i know its running and can move on
-```
-
-## My State 
-- It works fine with 25ms thing but i feel like thats not a really bad implementation 
-  -  At 1ms it doesnt work anymore
-
-- Calling it as an async function doesnt do anything because it needs to be awaited or polled 
-  - I don't async stuff and especially not rust async 
-
-  <!-- TODO: -->
-  - [ ] learn shit 
-
-### Learning Shit 
-https://rust-lang.github.io/async-book/01_getting_started/02_why_async.html
-
-> Futures are inert in Rust and make progress only when polled. Dropping a future stops it from making further progress.
-- does this mean that if program terminates the Futures threads are also dropped?
-
-> If you don't need async for performance reasons, threads can often be the simpler alternative.
-
-- Threads stay alive regardless of what happens to the parent thread 
-- 
-
-## Pragmatically though: 
-- when the main thread stops another thread still running does get terminated
-  - i have a sleep of 1.5 milliseconds (second/1000) and in the other thread one for 3 seconds
-    - the thing after the 3 sec sleep doesnt execute
-
-- Command::new are also independent threads!
-```
-- I don't know if this works. And i'm hella confused. Maybe the easiest thing would be to send stuff to stdout 
-  and some signal to take that and do the stuff while i do my other stuff in rust independently
-```
-
-Process ownership is something like 
-systemd > alacritty > zsh > pseudo-projectile > {fzf, find, git, notify-send}
-                          
-```
-I need to learn more about async stuff and threads. Also about the shell and OS. 
-But it seems like async has a lot of hurdles and would be pretty tough. 
-
-So maybe i should fall back on the solution  zsh-async  library 
-Or i give up the async dream and just have it be synchronous 
--> regular fetching has little downside 
-  -> Except for being prompted for the key
-```
