@@ -54,7 +54,7 @@ project_open() {
       cd $cd_path
 
       if [[ !$nogit && -d './.git' ]]; then
-        git_main & disown
+        (git_main & disown)
       fi
       if (( ${+editor} )); then 
         $editor . 
@@ -93,11 +93,11 @@ run_and_report_git_diff() {
 }
 
 git_main() { 
-  ( git_check_read_origin_and_fetch )
+  git_check_read_origin_and_fetch
 
   access=$?
 
   if [ $access -eq 0 ]; then 
-    ( run_and_report_git_diff >/dev/null & disown )
+    run_and_report_git_diff >/dev/null & disown
   fi
 }
