@@ -1,3 +1,10 @@
+# ARCHIVED 
+
+I archived this project as jumping is a solved issue. 
+I extracted the git check into the project ![git-check](https://github.com/git-girl/git-check).
+That part was better suited as a zsh hook. 
+I will look into the other plans like running a dev server on cd in the future in another project.
+
 # Pseudo Projectile Plugin for zsh 
 
 **Quickly jump between paths you regularly use**   
