@@ -86,7 +86,7 @@ run_and_report_git_diff() {
 
   git_diff=$(git diff @{u} HEAD --name-only)
   if [[ $git_diff != "" ]]; then
-    notify-send "PPP Git Report" "Found these files on origin not present locally: \n $git_diff"
+    notify-send "PPP Git Report" "Found these files on origin different to local: \n $git_diff"
   else 
     notify-send "PPP Git Report" "Clean: no diff to origin isn't ahead of local"
   fi  
